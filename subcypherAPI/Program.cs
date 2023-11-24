@@ -11,7 +11,7 @@ internal class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-        var app = builder.Build();
+        var app = builder.Build(); CRUD
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
@@ -27,13 +27,5 @@ internal class Program
         app.MapControllers();
 
         app.Run();
-    }
-
-    private static void ConfigureService(IServiceCollection services)
-    {
-        services.AddControllers();
-        services.AddSingleton<subcypherAPI.Logger>();
-
-
     }
 }

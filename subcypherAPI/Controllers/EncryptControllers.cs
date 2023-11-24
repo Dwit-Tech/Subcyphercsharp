@@ -17,19 +17,19 @@ namespace subcypherAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult<string> Encrypt([FromBody] EncryptModel encryptModel)
+        public ActionResult<string> Encrypt([FromBody] string stringToEncrypt)
         {
-            int key = encryptModel.Jumps;
+            int jumps = GetfromDatabase;
             string ALPHABET = "abcdefghijklmnopqrstuvwxyz";
             string cypherText = "";
 
-            foreach (char letter in encryptModel.PlainText)
+            foreach (char letter in stringToEncrypt)
             {
                 if (char.ToLower(letter) is >= 'a' and <= 'z')
                 {
                     int num = ALPHABET.IndexOf(char.ToLower(letter));
 
-                    num = (num + key) % ALPHABET.Length;
+                    num = (num + jumps) % ALPHABET.Length;
 
                     if (letter == char.ToLower(letter))
                     {
@@ -46,7 +46,14 @@ namespace subcypherAPI.Controllers
                 }
             }
 
-            _logger.AddLog($"encryption  -  {encryptModel.PlainText}  -  {cypherText}");
+            EncryptModel model = new EncryptModel();
+            model.PlainText = stringToEncrypt;
+            model.Jumps = jumps;
+            model.EncryptedText = cypherText;
+            model.EncryptionTime = DateTime.Now;
+
+            dbContext.EncryptModels.Add(model);
+            dbContext.SaveChanges();
 
             return cypherText;
         }
